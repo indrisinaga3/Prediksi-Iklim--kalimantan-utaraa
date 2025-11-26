@@ -23,7 +23,7 @@ def load_data():
 df = load_data()
 
 wilayah = "Kalimantan Utara"
-st.title(f"🌦️ Dashboard Analisis & Prediksi Iklim — {wilayah}")
+st.title(f"🌦 Dashboard Analisis & Prediksi Iklim — {wilayah}")
 
 
 # ========== 2️⃣ Sidebar Filter ==========
@@ -59,13 +59,9 @@ label = {
 }
 
 # ========== 3️⃣ Agregasi ==========
-agg_dict = {v:"mean" for v in available_vars}
-if "curah_hujan" in available_vars:
-    agg_dict["curah_hujan"] = "sum"
-
 numeric_cols = df.select_dtypes(include='number').columns
 
-monthly = df.groupby(["Tahun","Bulan"])[numeric_cols].sum().reset_index()
+monthly = df.groupby(["Tahun", "Bulan"], as_index=False)[numeric_cols].sum()
 
 
 # ========== 4️⃣ Model ==========
@@ -144,5 +140,3 @@ st.download_button(
     file_name="DATA KALUT 2015-2025.csv",
     mime="text/csv"
 )
-
-
