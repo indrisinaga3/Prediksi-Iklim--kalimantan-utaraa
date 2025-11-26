@@ -139,8 +139,9 @@ csv = future.to_csv(index=False).encode("utf8")
 st.download_button(
     "📥 Download Dataset Prediksi",
     data=csv,
-    file_name="prediksi_KALUT
+    file_name="prediksi_KALUT_
 -.csv",
     mime="text/csv"
 
 )
+
