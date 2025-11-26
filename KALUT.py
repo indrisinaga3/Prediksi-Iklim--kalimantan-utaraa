@@ -11,20 +11,23 @@ st.set_page_config(page_title="📊 Dashboard Prediksi Iklim", layout="wide")
 # ========== 1️⃣ LOAD DATA ==========
 @st.cache_data
 def load_data():
-    # Pastikan nama file sesuai dengan file Excel kamu
+    # Baca sheet pertama dari file Excel
     df = pd.read_excel("DATA KALUT 2015-2025 (1).xlsx", sheet_name=0)
 
-    # Hapus kolom duplikat jika ada
+    # Hapus kolom duplikat
     df = df.loc[:, ~df.columns.duplicated()]
 
-    # Ubah nama kolom jika perlu
+    # Rename kolom angin jika ada
     if "kecepatan_angin" in df.columns:
         df = df.rename(columns={"kecepatan_angin": "FF_X"})
 
-    # Konversi kolom tanggal
-    df["Tanggal"] = pd.to_datetime(df["Tanggal"], dayfirst=True)
+    # Pastikan kolom tanggal terbaca
+    if "Tanggal" in df.columns:
+        df["Tanggal"] = pd.to_datetime(df["Tanggal"], dayfirst=True)
+    elif "Date" in df.columns:
+        df["Tanggal"] = pd.to_datetime(df["Date"], dayfirst=True)
 
-    # Tambahkan kolom tahun dan bulan
+    # Tambahkan kolom Tahun dan Bulan
     df["Tahun"] = df["Tanggal"].dt.year
     df["Bulan"] = df["Tanggal"].dt.month
 
@@ -147,3 +150,5 @@ st.download_button(
     file_name="prediksi_KALUT.csv",
     mime="text/csv"
 )
+    
+
