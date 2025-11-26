@@ -63,7 +63,9 @@ agg_dict = {v:"mean" for v in available_vars}
 if "curah_hujan" in available_vars:
     agg_dict["curah_hujan"] = "sum"
 
-monthly = df.groupby(["Tahun","Bulan"]).agg(agg_dict).reset_index()
+numeric_cols = df.select_dtypes(include='number').columns
+
+monthly = df.groupby(["Tahun","Bulan"])[numeric_cols].sum().reset_index()
 
 
 # ========== 4️⃣ Model ==========
@@ -142,4 +144,5 @@ st.download_button(
     file_name="DATA KALUT 2015-2025.csv",
     mime="text/csv"
 )
+
 
