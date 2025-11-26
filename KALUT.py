@@ -11,7 +11,7 @@ st.set_page_config(page_title="📊 Dashboard Prediksi Iklim", layout="wide")
 # ========== 1️⃣ LOAD DATA ==========
 @st.cache_data
 def load_data():
-    df = pd.read_excel("Data KALUT 2015-2025.xlsx", sheet_name="Data Harian - Table")
+    df = pd.read_excel("DATA KALUT 2015-2025.xlsx", sheet_name="Data Harian - Table")
     df = df.loc[:, ~df.columns.duplicated()]
     if "kecepatan_angin" in df.columns:
         df = df.rename(columns={"kecepatan_angin":"FF_X"})
@@ -142,4 +142,5 @@ st.download_button(
     file_name="prediksi_KALUT
 -.csv",
     mime="text/csv"
+
 )
