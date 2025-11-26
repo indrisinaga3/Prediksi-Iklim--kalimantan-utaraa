@@ -22,7 +22,7 @@ def load_data():
 
 df = load_data()
 
-wilayah = "KALUT"
+wilayah = "Kalimantan Utara"
 st.title(f"🌦️ Dashboard Analisis & Prediksi Iklim — {wilayah}")
 
 
@@ -139,6 +139,7 @@ csv = future.to_csv(index=False).encode("utf8")
 st.download_button(
     "📥 Download Dataset Prediksi",
     data=csv,
-    file_name="prediksi_jawa_timur.csv",
+    file_name="prediksi_jawa-timur.csv",
     mime="text/csv"
 )
+
