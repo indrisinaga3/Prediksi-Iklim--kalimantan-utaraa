@@ -63,7 +63,7 @@ numeric_cols = df.select_dtypes(include='number').columns
 
 monthly = df.groupby(["Tahun", "Bulan"], as_index=False)[numeric_cols].sum()
 
-
+st.write("Kolom dalam monthly:", monthly.columns.tolist())
 # ========== 4️⃣ Model ==========
 models = {}
 metrics = {}
@@ -149,4 +149,5 @@ st.download_button(
     file_name="DATA KALUT 2015-2025.csv",
     mime="text/csv"
 )
+
 
