@@ -11,7 +11,7 @@ st.set_page_config(page_title="📊 Dashboard Prediksi Iklim", layout="wide")
 # ========== 1️⃣ LOAD DATA ==========
 @st.cache_data
 def load_data():
-    df = pd.read_excel("DATA KALUT 2015-2025.xlsx", sheet_name=0)
+    df = pd.read_excel("Data KALUT 2015-2015.xlsx", sheet_name="sheet_name=0")
     df = df.loc[:, ~df.columns.duplicated()]
     if "kecepatan_angin" in df.columns:
         df = df.rename(columns={"kecepatan_angin":"FF_X"})
@@ -22,8 +22,8 @@ def load_data():
 
 df = load_data()
 
-wilayah = "Kalimantan Utara"
-st.title(f"🌦 Dashboard Analisis & Prediksi Iklim — {wilayah}")
+wilayah = "KALUT"
+st.title(f"🌦️ Dashboard Analisis & Prediksi Iklim — {wilayah}")
 
 
 # ========== 2️⃣ Sidebar Filter ==========
@@ -59,36 +59,29 @@ label = {
 }
 
 # ========== 3️⃣ Agregasi ==========
-numeric_cols = df.select_dtypes(include='number').columns
+agg_dict = {v:"mean" for v in available_vars}
+if "curah_hujan" in available_vars:
+    agg_dict["curah_hujan"] = "sum"
 
-monthly = df.groupby(["Tahun", "Bulan"], as_index=False)[numeric_cols].sum()
+monthly = df.groupby(["Tahun","Bulan"]).agg(agg_dict).reset_index()
 
-st.write("Kolom dalam monthly:", monthly.columns.tolist())
+
 # ========== 4️⃣ Model ==========
 models = {}
 metrics = {}
 
 for v in available_vars:
-    # Target (kolom yang sedang diprediksi)
+    X = monthly[["Tahun","Bulan"]]
     y = monthly[v]
 
-    # Fitur
-    X = monthly[["Tahun", "Bulan"]]
-
-    # Split data
     Xtr, Xts, ytr, yts = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Model
     m = RandomForestRegressor(n_estimators=180, random_state=42)
-    m.fit(Xtr, ytr)
+    m.fit(Xtr,ytr)
     pred = m.predict(Xts)
 
-    # Simpan model & metrik
     models[v] = m
-    metrics[v] = (
-        mean_squared_error(yts, pred) ** 0.5,
-        r2_score(yts, pred)
-    )
+    metrics[v] = (mean_squared_error(yts,pred)**0.5, r2_score(yts,pred))
 
 # ========== 5️⃣ Card Statistik ==========
 c1,c2,c3 = st.columns(3)
@@ -146,9 +139,6 @@ csv = future.to_csv(index=False).encode("utf8")
 st.download_button(
     "📥 Download Dataset Prediksi",
     data=csv,
-    file_name="DATA KALUT 2015-2025.csv",
+    file_name="prediksi_KALUT_.csv",
     mime="text/csv"
 )
-
-
-
