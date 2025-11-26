@@ -69,17 +69,26 @@ models = {}
 metrics = {}
 
 for v in available_vars:
-    X = monthly[["Tahun","Bulan"]]
+    # Target (kolom yang sedang diprediksi)
     y = monthly[v]
 
+    # Fitur
+    X = monthly[["Tahun", "Bulan"]]
+
+    # Split data
     Xtr, Xts, ytr, yts = train_test_split(X, y, test_size=0.2, random_state=42)
 
+    # Model
     m = RandomForestRegressor(n_estimators=180, random_state=42)
-    m.fit(Xtr,ytr)
+    m.fit(Xtr, ytr)
     pred = m.predict(Xts)
 
+    # Simpan model & metrik
     models[v] = m
-    metrics[v] = (mean_squared_error(yts,pred)**0.5, r2_score(yts,pred))
+    metrics[v] = (
+        mean_squared_error(yts, pred) ** 0.5,
+        r2_score(yts, pred)
+    )
 
 # ========== 5️⃣ Card Statistik ==========
 c1,c2,c3 = st.columns(3)
@@ -140,3 +149,4 @@ st.download_button(
     file_name="DATA KALUT 2015-2025.csv",
     mime="text/csv"
 )
+
