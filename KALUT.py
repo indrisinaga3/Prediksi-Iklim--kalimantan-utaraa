@@ -23,7 +23,7 @@ def load_data():
 df = load_data()
 
 wilayah = "KALUT"
-st.title(f"🌦️ Dashboard Analisis & Prediksi Iklim — {KALUT}")
+st.title(f"🌦️ Dashboard Analisis & Prediksi Iklim — {wilayah}")
 
 
 # ========== 2️⃣ Sidebar Filter ==========
@@ -142,3 +142,4 @@ st.download_button(
     file_name="DATA KALUT 2015-2025.csv",
     mime="text/csv"
 )
+
